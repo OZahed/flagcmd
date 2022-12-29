@@ -14,18 +14,22 @@ type SubCommandError struct {
 }
 
 func (s SubCommandError) Error() string {
-	return fmt.Sprintf("subcommand %s got error with %s,\nUsage: %s", s.Where.SubCommandName, s.Why.Error(), s.Where.Usage)
+	return fmt.Sprintf("subcommand %s got error with %s,\nUsage: %s",
+		s.Where.SubCommandName,
+		s.Why.Error(),
+		s.Where.Usage,
+	)
 }
 
 type SubCommand struct {
-	SubCommandName string
-	SortDesc       string
-	LongDesc       string
-	Usage          string
-	FlagSet        *flag.FlagSet
-	Handler        SubCommandHandler
-	ErrorHandler   SubCommandErrorHandler
-	parsed         bool
+	SubCommandName string                 `validate:"required,min=1"`
+	SortDesc       string                 `validate:"required"`
+	LongDesc       string                 `validate:"-"`
+	Usage          string                 `validate:"required"`
+	FlagSet        *flag.FlagSet          `validate:"required"`
+	Handler        SubCommandHandler      `validate:"required"`
+	ErrorHandler   SubCommandErrorHandler `validate:"required"`
+	parsed         bool                   `validate:"-"`
 }
 
 func (s *SubCommand) Help() string {
@@ -41,5 +45,7 @@ func (s *SubCommand) SetPared(p bool) {
 }
 
 func (s *SubCommand) ParseFlags(args []string) {
-	s.FlagSet.Parse(args)
+	if err := s.FlagSet.Parse(args); err != nil {
+		LogErrorf("Could not parse the values %w", err)
+	}
 }
