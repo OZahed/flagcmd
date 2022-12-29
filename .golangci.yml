@@ -16,7 +16,7 @@ linters:
     - errcheck
     - govet # code styling include commenting all exported values
     - revive # golint is replaced by revive
-    # - goimports # checks for alphabetical import statements
+    - goimports # checks for alphabetical import statements
     - staticcheck
     - typecheck # type check, specifically for generics
     - gosec # Gosec checks for common security issues, recommended to check for known CVE problems in your code
