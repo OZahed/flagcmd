@@ -14,7 +14,11 @@ type SubCommandError struct {
 }
 
 func (s SubCommandError) Error() string {
-	return fmt.Sprintf("subcommand %s got error with %s,\nUsage: %s", s.Where.SubCommandName, s.Why.Error(), s.Where.Usage)
+	return fmt.Sprintf("subcommand %s got error with %s,\nUsage: %s",
+		s.Where.SubCommandName,
+		s.Why.Error(),
+		s.Where.Usage,
+	)
 }
 
 type SubCommand struct {
@@ -41,5 +45,7 @@ func (s *SubCommand) SetPared(p bool) {
 }
 
 func (s *SubCommand) ParseFlags(args []string) {
-	s.FlagSet.Parse(args)
+	if err := s.FlagSet.Parse(args); err != nil {
+		LogErrorf("Could not parse the values %w", err)
+	}
 }
