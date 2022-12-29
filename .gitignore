@@ -16,3 +16,7 @@ todo.*
 
 # Dependency directories (remove the comment below to include it)
 vendor/
+
+# Remove IDE settings
+.vscode
+.idea
