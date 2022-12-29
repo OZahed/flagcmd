@@ -22,14 +22,14 @@ func (s SubCommandError) Error() string {
 }
 
 type SubCommand struct {
-	SubCommandName string
-	SortDesc       string
-	LongDesc       string
-	Usage          string
-	FlagSet        *flag.FlagSet
-	Handler        SubCommandHandler
-	ErrorHandler   SubCommandErrorHandler
-	parsed         bool
+	SubCommandName string                 `validate:"required,min=1"`
+	SortDesc       string                 `validate:"required"`
+	LongDesc       string                 `validate:"-"`
+	Usage          string                 `validate:"required"`
+	FlagSet        *flag.FlagSet          `validate:"required"`
+	Handler        SubCommandHandler      `validate:"required"`
+	ErrorHandler   SubCommandErrorHandler `validate:"required"`
+	parsed         bool                   `validate:"-"`
 }
 
 func (s *SubCommand) Help() string {

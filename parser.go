@@ -69,20 +69,29 @@ func Parse() error {
 	if len(os.Args) < 2 {
 		cmd, ok := comamnds[""]
 		if !ok {
+			allUsage()
 			return ErrNoArgs
 		}
 		execute(cmd)
-
 	}
 	for name, cmd := range comamnds {
 		if os.Args[1] == name {
-			cmd.ParseFlags(os.Args[2:])
+			cmd.ParseFlags(os.Args)
 			cmd.SetPared(true)
 			execute(cmd)
-			break
+			return nil
 		}
 	}
 	return nil
+}
+
+func allUsage() {
+	usg := []string{appName, " -- help \n[sub command] [OPT]\nsubcommands:\n"}
+	for n, c := range comamnds {
+		usg = append(usg, n, "\t", c.SortDesc, "\n")
+	}
+	strings.Join(usg, "  ")
+	fmt.Print(usg)
 }
 
 func execute(cmd *SubCommand) {
