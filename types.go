@@ -5,46 +5,45 @@ import (
 	"fmt"
 )
 
-type SubCommandHandler func(*SubCommand) error
+type SubCommandHandler func(*Command) error
 type SubCommandErrorHandler func(SubCommandError)
 
 type SubCommandError struct {
-	Where *SubCommand
+	Where *Command
 	Why   error
 }
 
 func (s SubCommandError) Error() string {
 	return fmt.Sprintf("subcommand %s got error with %s,\nUsage: %s",
-		s.Where.SubCommandName,
+		s.Where.Name,
 		s.Why.Error(),
 		s.Where.Usage,
 	)
 }
 
-type SubCommand struct {
-	SubCommandName string                 `validate:"required,min=1"`
-	SortDesc       string                 `validate:"required"`
-	LongDesc       string                 `validate:"-"`
-	Usage          string                 `validate:"required"`
-	FlagSet        *flag.FlagSet          `validate:"required"`
-	Handler        SubCommandHandler      `validate:"required"`
-	ErrorHandler   SubCommandErrorHandler `validate:"required"`
-	parsed         bool                   `validate:"-"`
+type Command struct {
+	Name         string                 `validate:"required,min=1"`
+	Desc         string                 `validate:"required"`
+	Usage        string                 `validate:"required"`
+	FlagSet      *flag.FlagSet          `validate:"required"`
+	Handler      SubCommandHandler      `validate:"required"`
+	ErrorHandler SubCommandErrorHandler `validate:"required"`
+	parsed       bool                   `validate:"-"`
 }
 
-func (s *SubCommand) Help() string {
+func (s *Command) Help() string {
 	return s.Usage
 }
 
-func (s *SubCommand) Parsed() bool {
+func (s *Command) Parsed() bool {
 	return s.parsed
 }
 
-func (s *SubCommand) SetPared(p bool) {
+func (s *Command) SetPared(p bool) {
 	s.parsed = p
 }
 
-func (s *SubCommand) ParseFlags(args []string) {
+func (s *Command) ParseFlags(args []string) {
 	if err := s.FlagSet.Parse(args); err != nil {
 		LogErrorf("Could not parse the values %w", err)
 	}
