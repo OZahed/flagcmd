@@ -1,7 +1,6 @@
 package flagcmd
 
 import (
-	"flag"
 	"fmt"
 )
 
@@ -25,7 +24,7 @@ type Command struct {
 	Name         string                 `validate:"required,min=1"`
 	Desc         string                 `validate:"required"`
 	Usage        string                 `validate:"required"`
-	FlagSet      *flag.FlagSet          `validate:"required"`
+	Values       interface{}            `validate:"required"` // pointer to field's value structs
 	Handler      SubCommandHandler      `validate:"required"`
 	ErrorHandler SubCommandErrorHandler `validate:"required"`
 	parsed       bool                   `validate:"-"`
@@ -44,7 +43,7 @@ func (s *Command) SetPared(p bool) {
 }
 
 func (s *Command) ParseFlags(args []string) {
-	if err := s.FlagSet.Parse(args); err != nil {
+	if err := ParseFlagSet(s.Values); err != nil {
 		LogErrorf("Could not parse the values %w", err)
 	}
 }

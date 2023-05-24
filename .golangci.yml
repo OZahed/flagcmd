@@ -81,12 +81,14 @@ linters-settings:
           - fmt.Fprintln
           - hash.Hash.Write
   gosec:
+    excludes:
+      - G103 # Audit the use of unsafe block
     # To select a subset of rules to run.
     # Available rules: https://github.com/securego/gosec#available-rules
     includes:
       - G101 # Look for hard coded credentials
       - G102 # Bind to all interfaces
-      - G103 # Audit the use of unsafe block
+
       - G104 # Audit errors not checked
       - G107 # Url provided to HTTP request as taint input
       - G110 # Potential DoS vulnerability via decompression bomb

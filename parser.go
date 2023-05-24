@@ -23,7 +23,7 @@ func DefaultErrHandler(e SubCommandError) {
 }
 
 func DefaultHandler(c *Command) error {
-	if _, err := fmt.Printf("sub command %s called\n", s.Name); err != nil {
+	if _, err := fmt.Printf("sub command %s called\n", c.Name); err != nil {
 		return ErrStdOut
 	}
 	c.Help()
